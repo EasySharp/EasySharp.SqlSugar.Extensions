@@ -8,7 +8,7 @@ namespace ClassLibrary1
         {
             var client = new SqlSugarClient(new ConnectionConfig());
             var sql = client.Queryable<object>().ToSql();
-            // EasySharp.SqlSugarCore.Extensions.4.2.1.9
+            // EasySharp.SqlSugarCore.Extensions.4.0.0.3
         }
     }
 }
