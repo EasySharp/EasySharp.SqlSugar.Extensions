@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace SqlSugar
+namespace SqlSugar.Extensions
 {
     [Serializable]
     public class SqlSugarEntityNotFoundException : InvalidOperationException
     {
         public Type EntityType { get; }
-        public string Predicate { get; }
-        public string Sql { get; }
+        public string? Predicate { get; }
+        public string? Sql { get; }
 
         public SqlSugarEntityNotFoundException(
             Type entityType,
