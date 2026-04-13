@@ -7,13 +7,13 @@ namespace SqlSugar.Extensions
     public class SqlSugarEntityNotFoundException : InvalidOperationException
     {
         public Type EntityType { get; }
-        public string Predicate { get; }
-        public string Sql { get; }
+        public string? Predicate { get; }
+        public string? Sql { get; }
 
         public SqlSugarEntityNotFoundException(
             Type entityType,
-            string predicate = null,
-            string sql = null)
+            string? predicate = null,
+            string? sql = null)
             : base(BuildMessage(entityType, predicate, sql))
         {
             EntityType = entityType ?? throw new ArgumentNullException(nameof(entityType));
@@ -24,7 +24,7 @@ namespace SqlSugar.Extensions
         public SqlSugarEntityNotFoundException(
             Type entityType,
             string message,
-            Exception innerException = null)
+            Exception? innerException = null)
             : base(message, innerException)
         {
             EntityType = entityType ?? throw new ArgumentNullException(nameof(entityType));
@@ -37,7 +37,7 @@ namespace SqlSugar.Extensions
             StreamingContext context)
             : base(info, context)
         {
-            EntityType = (Type)info.GetValue(nameof(EntityType), typeof(Type));
+            EntityType = (Type)info.GetValue(nameof(EntityType), typeof(Type))!;
             Predicate = info.GetString(nameof(Predicate));
             Sql = info.GetString(nameof(Sql));
         }
@@ -50,7 +50,7 @@ namespace SqlSugar.Extensions
             info.AddValue(nameof(Sql), Sql);
         }
 
-        private static string BuildMessage(Type type, string predicate, string sql)
+        private static string BuildMessage(Type type, string? predicate, string? sql)
         {
             const int maxPredicateLength = 200;
             const int maxSqlLength = 500;

@@ -16,7 +16,7 @@ namespace SqlSugar.Extensions
             {
                 ThrowNotFound(queryable, businessKey);
             }
-            return entity;
+            return entity!;
         }
 
         public static async Task<T> FirstRequiredAsync<T>(this ISugarQueryable<T> queryable, Expression<Func<T, bool>> expression)
@@ -27,7 +27,7 @@ namespace SqlSugar.Extensions
             {
                 ThrowNotFound(queryable, expression);
             }
-            return entity;
+            return entity!;
         }
 
 
@@ -39,7 +39,7 @@ namespace SqlSugar.Extensions
             {
                 ThrowNotFound(queryable, pkValue.ToString());
             }
-            return entity;
+            return entity!;
         }
 
         public static async Task<T> InSingleRequiredAsync<T>(this ISugarQueryable<T> queryable, object pkValue)
@@ -50,16 +50,7 @@ namespace SqlSugar.Extensions
             {
                 ThrowNotFound(queryable, pkValue.ToString());
             }
-            return entity;
-        }
-
-        public static async Task<T> InSingleAsync<T>(this ISugarQueryable<T> queryable, object pkValue)
-        {
-            Check.Exception(queryable.QueryBuilder.SelectValue.HasValue(), "'InSingle' and' Select' can't be used together,You can use .Select(it=>...).Single(it.id==1)");
-            List<T> list = await queryable.In<object>(pkValue).ToListAsync();
-            T obj = list != null ? list.SingleOrDefault<T>() : default(T);
-            list = (List<T>)null;
-            return obj;
+            return entity!;
         }
 
         private static void ThrowNotFound<T>(
@@ -84,9 +75,9 @@ namespace SqlSugar.Extensions
                 GetSqlString(query));
         }
 
-        private static string GetSqlString<T>(ISugarQueryable<T> query)
+        private static string? GetSqlString<T>(ISugarQueryable<T> query)
         {
-            string sql = null;
+            string? sql = null;
 
             try
             {
@@ -103,6 +94,13 @@ namespace SqlSugar.Extensions
         public static string ToSqlString<T>(this ISugarQueryable<T> query)
         {
             return query.ToSql().Key;
+        }
+
+        public static async Task<T> InSingleAsync<T>(this ISugarQueryable<T> queryable, object pkValue)
+        {
+            Check.Exception(queryable.QueryBuilder.SelectValue.HasValue(), "'InSingle' and' Select' can't be used together,You can use .Select(it=>...).Single(it.id==1)");
+            var list = await queryable.In(pkValue).ToListAsync();
+            return list.HasValue() ? list.SingleOrDefault() : default;
         }
     }
 }
