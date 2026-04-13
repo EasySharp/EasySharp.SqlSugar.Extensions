@@ -1,15 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+	  <TargetFramework>netstandard2.0</TargetFramework>
+	  <RootNamespace>SqlSugar.Extensions</RootNamespace>
+	  <Nullable>enable</Nullable>
+	  <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
 
 	<ItemGroup>
 		<!--<PackageReference Include="SqlSugarCore" Version="5.1.4.214" />-->
-		<PackageReference Include="SqlSugarCore" Version="4.5.1" />
+		<!--<PackageReference Include="SqlSugarCore" Version="4.2.0" />-->
+		<PackageReference Include="SqlSugarCore" Version="4.3.2.4" />
+		<!--<PackageReference Include="SqlSugarCore" Version="4.5.0.2" />-->
 	</ItemGroup>
 
 
