@@ -96,11 +96,11 @@ namespace SqlSugar.Extensions
             return query.ToSql().Key;
         }
 
-        public static async Task<T> InSingleAsync<T>(this ISugarQueryable<T> queryable, object pkValue)
+        public static async Task<T?> InSingleAsync<T>(this ISugarQueryable<T> queryable, object pkValue)
         {
             Check.Exception(queryable.QueryBuilder.SelectValue.HasValue(), "'InSingle' and' Select' can't be used together,You can use .Select(it=>...).Single(it.id==1)");
             var list = await queryable.In(pkValue).ToListAsync();
-            return list.HasValue() ? list.SingleOrDefault() : default;
+            return list == null ? default : list.SingleOrDefault() ;
         }
     }
 }

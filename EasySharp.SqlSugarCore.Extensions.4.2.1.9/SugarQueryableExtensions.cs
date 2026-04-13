@@ -98,14 +98,14 @@ namespace SqlSugar.Extensions
             return query.ToSql().Key;
         }
 
-        public static async Task<T> InSingleAsync<T>(this ISugarQueryable<T> queryable, object pkValue)
+        public static async Task<T?> InSingleAsync<T>(this ISugarQueryable<T> queryable, object pkValue)
         {
             Check.Exception(queryable.SqlBuilder.QueryBuilder.SelectValue.HasValue(), "'InSingle' and' Select' can't be used together,You can use .Select(it=>...).Single(it.id==1)");
             var list = await queryable.In(pkValue).ToListAsync();
-            return list.HasValue() ? list.SingleOrDefault() : default;
+            return list == null ? default : list.SingleOrDefault();
         }
 
-        public static async Task<List<T>> ToListAsync<T>(this ISugarQueryable<T> queryable)
+        public static async Task<List<T>?> ToListAsync<T>(this ISugarQueryable<T> queryable)
         {
             var result = new Task<List<T>>(() =>
             {
@@ -141,24 +141,19 @@ namespace SqlSugar.Extensions
             return asyncQueryable;
         }
 
-        public static async Task<T> FirstAsync<T>(this ISugarQueryable<T> queryable, Expression<Func<T, bool>> expression)
+        public static async Task<T?> FirstAsync<T>(this ISugarQueryable<T> queryable, Expression<Func<T, bool>> expression)
         {
             return await queryable.Where(expression).FirstAsync();
         }
 
-        public static async Task<T> FirstAsync<T>(this ISugarQueryable<T> queryable)
+        public static async Task<T?> FirstAsync<T>(this ISugarQueryable<T> queryable)
         {
             if (queryable.SqlBuilder.QueryBuilder.OrderByValue.IsNullOrEmpty())
                 queryable.SqlBuilder.QueryBuilder.OrderByValue = queryable.SqlBuilder.QueryBuilder.DefaultOrderByTemplate;
-            if (queryable.SqlBuilder.QueryBuilder.Skip.HasValue)
-            {
-                queryable.SqlBuilder.QueryBuilder.Take = 1;
-                return (await queryable.ToListAsync()).FirstOrDefault();
-            }
-            queryable.SqlBuilder.QueryBuilder.Skip = 0;
+            queryable.SqlBuilder.QueryBuilder.Skip ??= 0;
             queryable.SqlBuilder.QueryBuilder.Take = 1;
             var list = await queryable.ToListAsync();
-            return list.HasValue() ? list.FirstOrDefault() : default;
+            return list != null ? list.SingleOrDefault() : default;
         }
     }
 }
