@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SqlSugar.Extensions;
+namespace EasySharp.SqlSugarCore.Extensions;
 
 internal class ErrorMessage
 {

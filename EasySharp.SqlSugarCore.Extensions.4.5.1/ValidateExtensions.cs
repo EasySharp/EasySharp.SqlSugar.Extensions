@@ -1,12 +1,11 @@
 ﻿using System;
 
-namespace SqlSugar.Extensions
+namespace EasySharp.SqlSugarCore.Extensions;
+
+internal static class ValidateExtensions
 {
-    internal static class ValidateExtensions
+    public static bool HasValue(this object? thisValue)
     {
-        public static bool HasValue(this object? thisValue)
-        {
-            return thisValue != null && thisValue != DBNull.Value && thisValue.ToString() != "";
-        }
+        return thisValue != null && thisValue != DBNull.Value && thisValue.ToString() != "";
     }
 }
