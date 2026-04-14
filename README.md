@@ -30,7 +30,7 @@ dotnet add package EasySharp.SqlSugarCore.Extensions
 
 | 项目名 | SqlSugarCore 版本 | 目标框架 |
 |------|--------------|----------|
-| EasySharp.SqlSugarCore.Extensions | 5.0.8.2~最新版本 | netstandard2.1 |
+| EasySharp.SqlSugarCore.Extensions | 5.0.8.2~更高版本 | netstandard2.1 |
 | EasySharp.SqlSugarCore.Extensions.5.0.0.5 | 5.0.0.5~5.0.8.1 | netstandard2.1 |
 | EasySharp.SqlSugarCore.Extensions.4.5.1 | 4.5.1~5.0.0.5 | netstandard2.0 |
 | EasySharp.SqlSugarCore.Extensions.4.3.2.4 | 4.3.2.4~4.5.0.2 | netstandard2.0 |
@@ -101,16 +101,16 @@ catch (SqlSugarEntityNotFoundException ex)
 
 | 方法 | 描述 |
 |------|------|
-| `FirstRequired<T>()` | 同步获取第一条记录，不存在则抛出异常 |
-| `FirstRequiredAsync<T>()` | 异步获取第一条记录，不存在则抛出异常 |
-| `FirstRequired<T>(Expression<Func<T, bool>>)` | 根据条件同步获取第一条记录，不存在则抛出异常 |
-| `FirstRequiredAsync<T>(Expression<Func<T, bool>>)` | 根据条件异步获取第一条记录，不存在则抛出异常 |
-| `SingleRequired<T>()` | 同步获取一条记录，如果记录超过一条则抛异常，不存在则抛出异常 |
-| `SingleRequiredAsync<T>()` | 异步获取一条记录，如果记录超过一条则抛异常，不存在则抛出异常 |
-| `SingleRequired<T>(Expression<Func<T, bool>>)` | 根据条件同步获取一条记录，如果记录超过一条则抛异常，不存在则抛出异常 |
-| `SingleRequiredAsync<T>(Expression<Func<T, bool>>)` | 根据条件异步获取一条记录，如果记录超过一条则抛异常，不存在则抛出异常 |
-| `InSingleRequired<T>(object pkValue)` | 根据主键获取记录，不存在则抛出异常 |
-| `InSingleRequiredAsync<T>(object pkValue)` | 异步根据主键获取记录，不存在则抛出异常 |
+| `FirstRequired<T>()` | 同步获取第一条记录，不存在则抛出 `SqlSugarEntityNotFoundException` |
+| `FirstRequiredAsync<T>()` | 异步获取第一条记录，不存在则抛出 `SqlSugarEntityNotFoundException` |
+| `FirstRequired<T>(Expression<Func<T, bool>>)` | 根据条件同步获取第一条记录，不存在则抛出 `SqlSugarEntityNotFoundException` |
+| `FirstRequiredAsync<T>(Expression<Func<T, bool>>)` | 根据条件异步获取第一条记录，不存在则抛出 `SqlSugarEntityNotFoundException` |
+| `SingleRequired<T>()` | 同步获取一条记录，如果记录超过一条则抛出 `SqlSugarException`，不存在则抛出 `SqlSugarEntityNotFoundException` |
+| `SingleRequiredAsync<T>()` | 异步获取一条记录，如果记录超过一条则抛出 `SqlSugarException`，不存在则抛出 `SqlSugarEntityNotFoundException` |
+| `SingleRequired<T>(Expression<Func<T, bool>>)` | 根据条件同步获取一条记录，如果记录超过一条抛出 `SqlSugarException`，不存在则抛出 `SqlSugarEntityNotFoundException` |
+| `SingleRequiredAsync<T>(Expression<Func<T, bool>>)` | 根据条件异步获取一条记录，如果记录超过一条抛出 `SqlSugarException`，不存在则抛出 `SqlSugarEntityNotFoundException` |
+| `InSingleRequired<T>(object pkValue)` | 根据主键获取记录，不存在则抛出 `SqlSugarEntityNotFoundException` |
+| `InSingleRequiredAsync<T>(object pkValue)` | 异步根据主键获取记录，不存在则抛出 `SqlSugarEntityNotFoundException` |
 
 ### SqlSugarEntityNotFoundException
 
@@ -122,7 +122,7 @@ catch (SqlSugarEntityNotFoundException ex)
 
 ## 依赖项
 
-- [SqlSugarCore](https://www.nuget.org/packages/SqlSugarCore/) (4.0.0.3 或最新版本)
+- [SqlSugarCore](https://www.nuget.org/packages/SqlSugarCore/) (4.0.0.3 或更高版本)
 
 ## 许可证
 
