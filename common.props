@@ -1,0 +1,40 @@
+<Project>
+  <PropertyGroup>
+    <RootNamespace>EasySharp.SqlSugarCore.Extensions</RootNamespace>
+    <AssemblyName>$(RootNamespace)</AssemblyName>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <Title>SqlSugarCoreExt</Title>
+    <Authors>EasySharp,fish</Authors>
+    <Company>EasySharp</Company>
+    <Copyright>Copyright (c) 2026 EasySharp</Copyright>
+    <Description>SqlSugar ORM 的扩展库，提供了一组强类型的查询扩展方法，用于简化数据库查询操作并增强错误处理。
+
+功能特性
+强类型查询：提供 FirstRequiredAsync 、 SingleRequiredAsync 和 InSingleRequiredAsync 等扩展方法，确保查询结果存在
+详细的异常信息：当实体未找到时，抛出包含实体类型、查询条件 SQL 语句的详细异常
+支持同步和异步操作：所有方法都提供同步和异步版本
+多版本支持：针对不同 SqlSugar 版本提供兼容包，最低可兼容至 SqlSugarCore 4.0.0.3 版本
+    </Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/EasySharp/EasySharp.SqlSugar.Extensions</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/EasySharp/EasySharp.SqlSugar.Extensions</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>EasySharp;SqlSugarCore;Extensions</PackageTags>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- Include symbol files (*.pdb) in the built .nupkg -->
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
+
+  <!--<ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>-->
+</Project>

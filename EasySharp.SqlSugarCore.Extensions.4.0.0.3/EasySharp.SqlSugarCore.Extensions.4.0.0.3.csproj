@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>netstandard1.6</TargetFramework>
-		<RootNamespace>SqlSugar.Extensions</RootNamespace>
-		<Nullable>enable</Nullable>
-		<LangVersion>latest</LangVersion>
-	</PropertyGroup>
+  <Import Project="..\common.props" />
 
-	<ItemGroup>
-		<PackageReference Include="SqlSugarCore" Version="[4.0.0.3, 4.2.1.9)" />
-		<PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
-	</ItemGroup>
+  <PropertyGroup>
+  	<TargetFramework>netstandard1.6</TargetFramework>
+  	<Version>4.0.0.3</Version>
+  </PropertyGroup>
+  
+  <ItemGroup>
+  	<PackageReference Include="SqlSugarCore" Version="[4.0.0.3, 4.2.1.9)" />
+  	<PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
+  </ItemGroup>
 
 </Project>
