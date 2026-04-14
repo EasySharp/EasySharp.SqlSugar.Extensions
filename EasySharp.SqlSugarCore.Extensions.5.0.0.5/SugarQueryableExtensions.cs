@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace SqlSugar
+namespace SqlSugar.Extensions
 {
     public static class SugarQueryableExtensions
     {
@@ -14,7 +14,7 @@ namespace SqlSugar
             {
                 ThrowNotFound(queryable, businessKey);
             }
-            return entity;
+            return entity!;
         }
 
         public static async Task<T> FirstRequiredAsync<T>(this ISugarQueryable<T> queryable, Expression<Func<T, bool>> expression)
@@ -25,7 +25,7 @@ namespace SqlSugar
             {
                 ThrowNotFound(queryable, expression);
             }
-            return entity;
+            return entity!;
         }
 
 
@@ -37,7 +37,7 @@ namespace SqlSugar
             {
                 ThrowNotFound(queryable, pkValue.ToString());
             }
-            return entity;
+            return entity!;
         }
 
         public static async Task<T> InSingleRequiredAsync<T>(this ISugarQueryable<T> queryable, object pkValue)
@@ -48,7 +48,7 @@ namespace SqlSugar
             {
                 ThrowNotFound(queryable, pkValue.ToString());
             }
-            return entity;
+            return entity!;
         }
 
         private static void ThrowNotFound<T>(
@@ -69,13 +69,13 @@ namespace SqlSugar
         {
             throw new SqlSugarEntityNotFoundException(
                 typeof(T),
-                predicate?.ToString(),
+                predicate.ToString(),
                 GetSqlString(query));
         }
 
-        private static string GetSqlString<T>(ISugarQueryable<T> query)
+        private static string? GetSqlString<T>(ISugarQueryable<T> query)
         {
-            string sql = null;
+            string? sql = null;
 
             try
             {
@@ -88,5 +88,11 @@ namespace SqlSugar
 
             return sql;
         }
+
+        public static string ToSqlString<T>(this ISugarQueryable<T> query)
+        {
+            return query.ToSql().Key;
+        }
     }
 }
+
