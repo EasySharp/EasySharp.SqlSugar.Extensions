@@ -1,15 +1,16 @@
-# EasySharp.SqlSugarCore.Extensions
+# EasySharp.SqlSugar.Extensions
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-`EasySharp.SqlSugarCore.Extensions` 是 [SqlSugar](https://github.com/donet5/SqlSugar) ORM 的扩展库，提供了一组强类型的查询扩展方法，用于简化数据库查询操作并增强错误处理。
+`EasySharp.SqlSugar.Extensions` 是 [SqlSugar](https://github.com/donet5/SqlSugar) ORM 的扩展库，提供了一组强类型的查询扩展方法，用于简化数据库查询操作并增强错误处理。
 
 ## 功能特性
 
-- **强类型查询**：提供 `FirstRequiredAsync` 和 `InSingleRequired` 等扩展方法，确保查询结果存在
-- **详细的异常信息**：当实体未找到时，抛出包含实体类型、查询条件和 SQL 语句的详细异常
-- **支持异步操作**：所有方法都提供异步版本
+- **强类型查询**：提供 `FirstRequiredAsync` 、 `SingleRequiredAsync` 和 `InSingleRequiredAsync` 等扩展方法，确保查询结果存在
+- **详细的异常信息**：当实体未找到时，抛出包含实体类型、查询条件 SQL 语句的详细异常
+- **支持同步和异步操作**：所有方法都提供同步和异步版本
 - **多版本支持**：针对不同 SqlSugar 版本提供兼容包
+- 
 
 ## 安装
 
@@ -27,14 +28,14 @@ dotnet add package EasySharp.SqlSugarCore.Extensions
 
 ## 版本兼容性
 
-| 包名 | SqlSugar 版本 | 目标框架 |
+| 项目名 | SqlSugarCore 版本 | 目标框架 |
 |------|--------------|----------|
-| EasySharp.SqlSugarCore.Extensions | 5.0.8.2+ | netstandard2.1 |
-| EasySharp.SqlSugarCore.Extensions.5.0.0.5 | 5.0.0.5 | netstandard2.1 |
-| EasySharp.SqlSugarCore.Extensions.4.5.1 | 4.5.1 | netstandard2.0 |
-| EasySharp.SqlSugarCore.Extensions.4.3.2.4 | 4.3.2.4 | netstandard2.0 |
-| EasySharp.SqlSugarCore.Extensions.4.2.1.9 | 4.2.1.9 | netstandard1.6 |
-| EasySharp.SqlSugarCore.Extensions.4.0.0.3 | 4.0.0.3 | netstandard1.6 |
+| EasySharp.SqlSugarCore.Extensions | 5.0.8.2~最新版本 | netstandard2.1 |
+| EasySharp.SqlSugarCore.Extensions.5.0.0.5 | 5.0.0.5~5.0.8.1 | netstandard2.1 |
+| EasySharp.SqlSugarCore.Extensions.4.5.1 | 4.5.1~5.0.0.5 | netstandard2.0 |
+| EasySharp.SqlSugarCore.Extensions.4.3.2.4 | 4.3.2.4~4.5.0.2 | netstandard2.0 |
+| EasySharp.SqlSugarCore.Extensions.4.2.1.9 | 4.2.1.9~4.2.3.3 | netstandard1.6 |
+| EasySharp.SqlSugarCore.Extensions.4.0.0.3 | 4.0.0.3~4.2.1.8 | netstandard1.6 |
 
 ## 使用方法
 
@@ -49,8 +50,13 @@ using SqlSugar.Extensions;
 var user = await db.Queryable<User>()
     .Where(u => u.Id == 1)
     .FirstRequiredAsync();
+    
+// 根据条件查询
+var user = await db.Queryable<User>()
+    .Where(u => u.Id == 1)
+    .SingleRequiredAsync();
 
-// 带业务键的查询
+// 如果记录不存在则抛出带有业务键的异常
 var order = await db.Queryable<Order>()
     .FirstRequiredAsync("Order-2024-001");
 ```
@@ -95,8 +101,14 @@ catch (SqlSugarEntityNotFoundException ex)
 
 | 方法 | 描述 |
 |------|------|
+| `FirstRequired<T>()` | 同步获取第一条记录，不存在则抛出异常 |
 | `FirstRequiredAsync<T>()` | 异步获取第一条记录，不存在则抛出异常 |
+| `FirstRequired<T>(Expression<Func<T, bool>>)` | 根据条件同步获取第一条记录，不存在则抛出异常 |
 | `FirstRequiredAsync<T>(Expression<Func<T, bool>>)` | 根据条件异步获取第一条记录，不存在则抛出异常 |
+| `SingleRequired<T>()` | 同步获取一条记录，如果记录超过一条则抛异常，不存在则抛出异常 |
+| `SingleRequiredAsync<T>()` | 异步获取一条记录，如果记录超过一条则抛异常，不存在则抛出异常 |
+| `SingleRequired<T>(Expression<Func<T, bool>>)` | 根据条件同步获取一条记录，如果记录超过一条则抛异常，不存在则抛出异常 |
+| `SingleRequiredAsync<T>(Expression<Func<T, bool>>)` | 根据条件异步获取一条记录，如果记录超过一条则抛异常，不存在则抛出异常 |
 | `InSingleRequired<T>(object pkValue)` | 根据主键获取记录，不存在则抛出异常 |
 | `InSingleRequiredAsync<T>(object pkValue)` | 异步根据主键获取记录，不存在则抛出异常 |
 
@@ -110,7 +122,7 @@ catch (SqlSugarEntityNotFoundException ex)
 
 ## 依赖项
 
-- [SqlSugarCore](https://www.nuget.org/packages/SqlSugarCore/) (5.0.8.2 或更高版本)
+- [SqlSugarCore](https://www.nuget.org/packages/SqlSugarCore/) (4.0.0.3 或最新版本)
 
 ## 许可证
 
