@@ -9,14 +9,35 @@ namespace SqlSugar.Extensions
 {
     public static class SugarQueryableExtensions
     {
+        public static T FirstRequired<T>(this ISugarQueryable<T> queryable, string? businessKey = null)
+            where T : class, new()
+        {
+            var entity = queryable.First();
+            if (entity == null)
+            {
+                ThrowNotFound(queryable, businessKey);
+            }
+            return entity!;
+        }
 
-        public static async Task<T> FirstRequiredAsync<T>(this ISugarQueryable<T> queryable, string businessKey = null)
+        public static async Task<T> FirstRequiredAsync<T>(this ISugarQueryable<T> queryable, string? businessKey = null)
             where T : class, new()
         {
             var entity = await queryable.FirstAsync();
             if (entity == null)
             {
                 ThrowNotFound(queryable, businessKey);
+            }
+            return entity!;
+        }
+
+        public static T FirstRequired<T>(this ISugarQueryable<T> queryable, Expression<Func<T, bool>> expression)
+            where T : class, new()
+        {
+            var entity = queryable.First(expression);
+            if (entity == null)
+            {
+                ThrowNotFound(queryable, expression);
             }
             return entity!;
         }
@@ -32,6 +53,49 @@ namespace SqlSugar.Extensions
             return entity!;
         }
 
+        public static T SingleRequired<T>(this ISugarQueryable<T> queryable, string? businessKey = null)
+            where T : class, new()
+        {
+            var entity = queryable.Single();
+            if (entity == null)
+            {
+                ThrowNotFound(queryable, businessKey);
+            }
+            return entity!;
+        }
+
+        public static async Task<T> SingleRequiredAsync<T>(this ISugarQueryable<T> queryable, string? businessKey = null)
+            where T : class, new()
+        {
+            var entity = await queryable.SingleAsync();
+            if (entity == null)
+            {
+                ThrowNotFound(queryable, businessKey);
+            }
+            return entity!;
+        }
+
+        public static T SingleRequired<T>(this ISugarQueryable<T> queryable, Expression<Func<T, bool>> expression)
+            where T : class, new()
+        {
+            var entity = queryable.Single(expression);
+            if (entity == null)
+            {
+                ThrowNotFound(queryable, expression);
+            }
+            return entity!;
+        }
+
+        public static async Task<T> SingleRequiredAsync<T>(this ISugarQueryable<T> queryable, Expression<Func<T, bool>> expression)
+            where T : class, new()
+        {
+            var entity = await queryable.SingleAsync(expression);
+            if (entity == null)
+            {
+                ThrowNotFound(queryable, expression);
+            }
+            return entity!;
+        }
 
         public static T InSingleRequired<T>(this ISugarQueryable<T> queryable, object pkValue)
             where T : class, new()
@@ -57,7 +121,7 @@ namespace SqlSugar.Extensions
 
         private static void ThrowNotFound<T>(
             ISugarQueryable<T> query,
-            string businessKey)
+            string? businessKey)
             where T : class, new()
         {
             throw new SqlSugarEntityNotFoundException(
@@ -153,7 +217,34 @@ namespace SqlSugar.Extensions
             queryable.SqlBuilder.QueryBuilder.Skip ??= 0;
             queryable.SqlBuilder.QueryBuilder.Take = 1;
             var list = await queryable.ToListAsync();
-            return list != null ? list.SingleOrDefault() : default;
+            return list != null ? list.FirstOrDefault() : default;
+        }
+
+        public static async Task<T?> SingleAsync<T>(this ISugarQueryable<T> queryable, Expression<Func<T, bool>> expression)
+        {
+            return await queryable.Where(expression).SingleAsync();
+        }
+
+        public static async Task<T?> SingleAsync<T>(this ISugarQueryable<T> queryable)
+        {
+            if (queryable.SqlBuilder.QueryBuilder.OrderByValue.IsNullOrEmpty())
+                queryable.SqlBuilder.QueryBuilder.OrderByValue = queryable.SqlBuilder.QueryBuilder.DefaultOrderByTemplate;
+            var skip = queryable.SqlBuilder.QueryBuilder.Skip;
+            var take = queryable.SqlBuilder.QueryBuilder.Take;
+            var orderByValue = queryable.SqlBuilder.QueryBuilder.OrderByValue;
+            queryable.SqlBuilder.QueryBuilder.Skip = null;
+            queryable.SqlBuilder.QueryBuilder.Take = null;
+            queryable.SqlBuilder.QueryBuilder.OrderByValue = null;
+            var list = await queryable.ToListAsync();
+            queryable.SqlBuilder.QueryBuilder.Skip = skip;
+            queryable.SqlBuilder.QueryBuilder.Take = take;
+            queryable.SqlBuilder.QueryBuilder.OrderByValue = orderByValue;
+            if (list == null || list.Count == 0)
+                return default;
+            if (list.Count < 2)
+                return list.SingleOrDefault();
+            Check.Exception(true, ErrorMessage.GetThrowMessage(".SingleAsync()  result must not exceed one . You can use.First()", "使用single查询结果集不能大于1，适合主键查询，如果大于1你可以使用Queryable.First"));
+            return default;
         }
     }
 }

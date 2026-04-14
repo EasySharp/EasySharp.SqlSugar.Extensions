@@ -6,13 +6,35 @@ namespace SqlSugar.Extensions
 {
     public static class SugarQueryableExtensions
     {
-        public static async Task<T> FirstRequiredAsync<T>(this ISugarQueryable<T> queryable, string businessKey = null)
+        public static T FirstRequired<T>(this ISugarQueryable<T> queryable, string? businessKey = null)
+            where T : class, new()
+        {
+            var entity = queryable.First();
+            if (entity == null)
+            {
+                ThrowNotFound(queryable, businessKey);
+            }
+            return entity!;
+        }
+
+        public static async Task<T> FirstRequiredAsync<T>(this ISugarQueryable<T> queryable, string? businessKey = null)
             where T : class, new()
         {
             var entity = await queryable.FirstAsync();
             if (entity == null)
             {
                 ThrowNotFound(queryable, businessKey);
+            }
+            return entity!;
+        }
+
+        public static T FirstRequired<T>(this ISugarQueryable<T> queryable, Expression<Func<T, bool>> expression)
+            where T : class, new()
+        {
+            var entity = queryable.First(expression);
+            if (entity == null)
+            {
+                ThrowNotFound(queryable, expression);
             }
             return entity!;
         }
@@ -28,6 +50,49 @@ namespace SqlSugar.Extensions
             return entity!;
         }
 
+        public static T SingleRequired<T>(this ISugarQueryable<T> queryable, string? businessKey = null)
+            where T : class, new()
+        {
+            var entity = queryable.Single();
+            if (entity == null)
+            {
+                ThrowNotFound(queryable, businessKey);
+            }
+            return entity!;
+        }
+
+        public static async Task<T> SingleRequiredAsync<T>(this ISugarQueryable<T> queryable, string? businessKey = null)
+            where T : class, new()
+        {
+            var entity = await queryable.SingleAsync();
+            if (entity == null)
+            {
+                ThrowNotFound(queryable, businessKey);
+            }
+            return entity!;
+        }
+
+        public static T SingleRequired<T>(this ISugarQueryable<T> queryable, Expression<Func<T, bool>> expression)
+            where T : class, new()
+        {
+            var entity = queryable.Single(expression);
+            if (entity == null)
+            {
+                ThrowNotFound(queryable, expression);
+            }
+            return entity!;
+        }
+
+        public static async Task<T> SingleRequiredAsync<T>(this ISugarQueryable<T> queryable, Expression<Func<T, bool>> expression)
+            where T : class, new()
+        {
+            var entity = await queryable.SingleAsync(expression);
+            if (entity == null)
+            {
+                ThrowNotFound(queryable, expression);
+            }
+            return entity!;
+        }
 
         public static T InSingleRequired<T>(this ISugarQueryable<T> queryable, object pkValue)
             where T : class, new()
@@ -53,7 +118,7 @@ namespace SqlSugar.Extensions
 
         private static void ThrowNotFound<T>(
             ISugarQueryable<T> query,
-            string businessKey)
+            string? businessKey)
             where T : class, new()
         {
             throw new SqlSugarEntityNotFoundException(
